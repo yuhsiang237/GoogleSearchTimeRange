@@ -3,7 +3,21 @@
   <head>
   </head>
   <body>
-    1995-10-10~2000-10-10
+    <div style="width: 350px;padding: 5px;">
+    <div style="display: flex;">
+      Date range:&nbsp;
+      <select class="date-select" id="startYear" name="startYear"></select>&nbsp;
+      <select class="date-select" id="startMonth" name="startMonth"></select>&nbsp;
+      <div>~</div>&nbsp;
+      <select class="date-select" id="endYear" name="endYear"></select>&nbsp;
+      <select class="date-select" id="endMonth" name="endMonth"></select>&nbsp;
+    </div>
+    <div style="display: flex;">
+      Status:&nbsp;
+      <input type="radio" name="status" value="on">&nbsp;
+      <input type="radio" name="status" value="off">&nbsp;
+    </div>
+  </div>
     <script src="popup.js"></script>
   </body>
 </html>
