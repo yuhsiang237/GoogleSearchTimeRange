@@ -1,16 +1,23 @@
-document.addEventListener('DOMContentLoaded', function () {
-  
+document.addEventListener('DOMContentLoaded', async function () {
   // Init form inputs
   initSelectYear('startYear');
   initSelectYear('endYear');
   initSelectMonth('startMonth');
   initSelectMonth('endMonth');
-
+  
   // Set event for inputs
   document.querySelectorAll('.date-select')
     .forEach(select =>  select.addEventListener(
                         'change',
                         dateRangeChangeHandler));
+
+  // Init user data
+  const dateRange = await getDateRange();
+  document.getElementById('startYear').value = dateRange.startYear ?? 2023;
+  document.getElementById('startMonth').value = dateRange.startMonth ?? 1;
+  document.getElementById('endYear').value = dateRange.endYear ?? 2024;
+  document.getElementById('endMonth').value = dateRange.endMonth ?? 1;
+
 });
 
 function initSelectYear(selectorId) {
@@ -30,6 +37,29 @@ function addOption(selectorId, value, text) {
 }
 
 async function dateRangeChangeHandler() {
-  const ret = await chrome.runtime.sendMessage({ from: '[Demo] ping from popup script' });
-  alert(JSON.stringify(ret));
+  const res = await chrome.runtime.sendMessage(
+    { 
+      action:"CHANGE_DATE_RANGE",
+      payload:{
+        startYear: document.getElementById("startYear").value,
+        startMonth: document.getElementById("startMonth").value,
+        endYear: document.getElementById("endYear").value,
+        endMonth: document.getElementById("endMonth").value
+      }
+   });
+  if(res.response == true){
+    console.log('[info][popup]:receive from background script', res);
+    location.reload();
+  }
+}
+
+async function getDateRange() {
+  return new Promise(async function (res, rej) {
+    chrome.storage.local.get(['DATE_RANGE'], async function (result) {
+      const dateRange = result.DATE_RANGE;
+      dateRange.startDay = 10,
+        dateRange.endDay = 10,
+        res(dateRange);
+    });
+  });
 }

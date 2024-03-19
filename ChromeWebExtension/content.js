@@ -1,23 +1,26 @@
-function init(){
-  console.log("GoogleSearchTimeRange Load...")
+async function getDateRange() {
+  return new Promise(async function (res) {
+    chrome.storage.local.get(['DATE_RANGE'], async function (result) {
+      const dateRange = result.DATE_RANGE;
+      dateRange.startDay = 10,
+      dateRange.endDay = 10,
+      res(dateRange);
+    });
+  });
+}
+
+
+async function init(){
+  console.log("[info][content]: GoogleSearch DateRange is loading");
+  const dateRange = await getDateRange();
   const queryString = window.location.search
   const urlParams = new URLSearchParams(queryString)
   const tbs = urlParams.get('tbs')
-  const timeRange ={
-    start: {
-      year:'1995',
-      month:'10',
-      day:'10',
-    },
-    end: {
-      year:'2000',
-      month:'10',
-      day:'10',
-    }
-  }
+
   if(!tbs){
-    const directUrl = `${window.location.href}&tbs=cdr%3A1%2Ccd_min%3A${timeRange.start.month}%2F${timeRange.start.day}%2F${timeRange.start.year}%2Ccd_max%3A${timeRange.end.month}%2F${timeRange.end.day}%2F${timeRange.end.year}`
+    const directUrl = `${window.location.href}&tbs=cdr%3A1%2Ccd_min%3A${dateRange.startMonth}%2F${dateRange.startDay}%2F${dateRange.startYear}%2Ccd_max%3A${dateRange.endMonth}%2F${dateRange.endDay}%2F${dateRange.endYear}`
     window.location.href = directUrl
   }
+  console.log("[info][content]: GoogleSearch DateRange is loading success");
 }
 init();
