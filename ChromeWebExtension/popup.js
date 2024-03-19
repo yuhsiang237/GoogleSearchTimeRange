@@ -1,25 +1,27 @@
 document.addEventListener('DOMContentLoaded', function () {
-  populateYears('startYear');
-  populateYears('endYear');
-  populateMonths('startMonth');
-  populateMonths('endMonth');
+  
+  // Init form inputs
+  initSelectYear('startYear');
+  initSelectYear('endYear');
+  initSelectMonth('startMonth');
+  initSelectMonth('endMonth');
 
-  document.querySelectorAll('.date-select').forEach(select => {
-    select.addEventListener('change', adjustDays);
-  });
+  // Set event for inputs
+  document.querySelectorAll('.date-select')
+    .forEach(select =>  select.addEventListener(
+                        'change',
+                        dateRangeChangeHandler));
 });
 
-function populateYears(selectorId) {
+function initSelectYear(selectorId) {
   const currentYear = new Date().getFullYear();
-  for (let year = currentYear; year >= 1900; year--) {
+  for (let year = currentYear; year >= 1900; year--) 
     addOption(selectorId, year);
-  }
 }
 
-function populateMonths(selectorId) {
-  for (let month = 1; month <= 12; month++) {
+function initSelectMonth(selectorId) {
+  for (let month = 1; month <= 12; month++)
     addOption(selectorId, month, month);
-  }
 }
 
 function addOption(selectorId, value, text) {
@@ -27,11 +29,7 @@ function addOption(selectorId, value, text) {
   document.getElementById(selectorId).appendChild(option);
 }
 
-function adjustDays() {
-  chrome.tabs.getSelected(null, (tab) => {
-    var tabId = tab.id;
-    var sendMessage = (messageObj) => chrome.tabs.sendMessage(tabId, messageObj);
-    sendMessage({ action: 'ROTATE' })
-  });
+async function dateRangeChangeHandler() {
+  const ret = await chrome.runtime.sendMessage({ from: '[Demo] ping from popup script' });
+  alert(JSON.stringify(ret));
 }
-

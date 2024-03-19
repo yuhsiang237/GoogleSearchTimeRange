@@ -1,27 +1,4 @@
-chrome.runtime.onInstalled.addListener(() => {
-  console.log('setup')
+chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
+  console.log('receive from popup script', request);
+  sendResponse({ response: "pong from background" });
 });
-
-const rotateEvent = () => {
-  console.log('r');
-  alert('x1');
-};
-const reset = () => {
-  console.log('d');
-  alert('xy');
-}
-
-const onMessage = (message) => {
-  switch (message.action) {
-    case 'ROTATE':
-      rotateEvent();
-      break;
-    case 'RESET':
-      reset();
-      break;
-    default:
-      break;
-  }
-}
-
-chrome.runtime.onMessage.addListener(onMessage);
