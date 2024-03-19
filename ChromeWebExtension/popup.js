@@ -54,7 +54,7 @@ async function dateRangeChangeHandler() {
 }
 
 async function getDateRange() {
-  return new Promise(async function (res, rej) {
+  return new Promise(async function (res) {
     chrome.storage.local.get(['DATE_RANGE'], async function (result) {
       const dateRange = result.DATE_RANGE;
       dateRange.startDay = 10,
